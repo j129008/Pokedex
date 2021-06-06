@@ -7,6 +7,7 @@ app = Flask(__name__)
 migrate = Migrate(app, db)
 app.config.from_pyfile('local.cfg')
 app.config.update(migrate=migrate)
+db.init_app(app)
 
 app.register_blueprint(basic_api, url_prefix='/basic')
 
