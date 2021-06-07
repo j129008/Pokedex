@@ -3,6 +3,7 @@ from flask import jsonify
 from flask import request
 from basic.models import Info as InfoModel
 from basic.models import Type as TypeModel
+from basic.models import Evolution as EvolutionModel
 from db import db
 
 basic_api = Blueprint('basic', __name__)
@@ -37,3 +38,27 @@ def add_pokemon():
     db.session.commit()
 
     return jsonify({'Status': 'Create Success'})
+
+
+@basic_api.route('/delete/<int:pid>', methods=['DELETE'])
+def delete_pokemon(pid):
+    info_obj = InfoModel.query.filter_by(id=pid).first()
+    if not info_obj:
+        return jsonify({'Status': 'Pokemon not Exist'}), 404
+
+    evo_obj = EvolutionModel.query.filter_by(before=pid)
+    if evo_obj:
+        evo_obj.delete()
+
+    evo_obj = EvolutionModel.query.filter_by(after=pid)
+    if evo_obj:
+        evo_obj.delete()
+
+    type_obj = TypeModel.query.filter_by(pid=pid)
+    if type_obj:
+        type_obj.delete()
+
+    db.session.delete(info_obj)
+    db.session.commit()
+
+    return jsonify({'Status': 'Delete Success'})
