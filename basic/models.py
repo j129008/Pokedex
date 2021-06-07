@@ -15,6 +15,12 @@ class Type(db.Model):
     pid = db.Column(db.BigInteger)
     type = db.Column(db.Enum(PokemonType), default=PokemonType.Grass)
 
+    def from_json(self, json_obj):
+        if 'pid' in json_obj:
+            self.pid = json_obj['pid']
+        if 'type' in json_obj:
+            self.type = PokemonType[json_obj['type']]
+
 
 class Evolution(db.Model):
     __table_args__ = {'mysql_charset': 'utf8mb4'}
@@ -52,3 +58,18 @@ class Info(db.Model):
             'type': [type_obj.type.name for type_obj in type_objs],
             'evolutions': [obj.to_json() for obj in evolution_objs]
         }
+
+    @staticmethod
+    def verify(json_obj):
+        necessary_fields = ['number', 'name', 'types']
+
+        if not all([field in json_obj.keys() and json_obj[field] for field in necessary_fields]):
+            return False
+
+        return True
+
+    def from_json(self, json_obj):
+        if 'number' in json_obj:
+            self.number = json_obj['number']
+        if 'name' in json_obj:
+            self.name = json_obj['name']
