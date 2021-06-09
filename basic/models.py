@@ -56,7 +56,7 @@ class Info(db.Model):
     name = db.Column(db.String(100))
 
     def to_json(self):
-        evolution_objs = Evolution.query.filter_by(id=self.id).all()
+        evolution_objs = Evolution.query.filter_by(before=self.id).all()
         type_objs = Type.query.filter_by(pid=self.id).all()
 
         return {
