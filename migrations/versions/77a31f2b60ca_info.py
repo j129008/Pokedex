@@ -23,14 +23,15 @@ def upgrade():
         sa.Column('id', sa.BigInteger(), nullable=False),
         sa.Column('before', sa.BigInteger(), nullable=False),
         sa.Column('after', sa.BigInteger(), nullable=False),
-        sa.PrimaryKeyConstraint('id')
+        sa.PrimaryKeyConstraint('id'),
+        sa.UniqueConstraint('before', 'after')
     )
 
     op.create_table(
         'info',
         sa.Column('id', sa.BigInteger(), nullable=False),
-        sa.Column('number', sa.String(10), nullable=False),
-        sa.Column('name', sa.String(100), nullable=False),
+        sa.Column('number', sa.String(10), nullable=False, unique=True),
+        sa.Column('name', sa.String(100), nullable=False, unique=True),
         sa.Column('type', ENUM('Grass', 'Poison', 'Fire'), nullable=False),
         sa.PrimaryKeyConstraint('id')
     )
