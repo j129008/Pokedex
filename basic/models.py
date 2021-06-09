@@ -39,6 +39,14 @@ class Evolution(db.Model):
             'type': [type_obj.type.name for type_obj in type_objs]
         }
 
+    def from_json(self, json_obj):
+        before_pid = json_obj.get('before')
+        after_pid = json_obj.get('after')
+
+        if before_pid and after_pid:
+            self.before = before_pid
+            self.after = after_pid
+
 
 class Info(db.Model):
     __table_args__ = {'mysql_charset': 'utf8mb4'}

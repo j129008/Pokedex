@@ -79,3 +79,21 @@ def search():
     type_objs = TypeModel.query.filter_by(type=PokemonType[search_type]).all()
 
     return jsonify({'PokemonIds': [obj.pid for obj in type_objs]})
+
+
+@basic_api.route('/evolution/<int:before_pid>', methods=['POST'])
+def add_evolution(before_pid):
+    req_data = request.json
+    after_pid = req_data.get('after_pid')
+    after_pid = int(after_pid) if type(after_pid) is str and after_pid.isnumeric() else after_pid
+
+    evo_obj = EvolutionModel()
+    evo_obj.from_json({
+        'before': before_pid,
+        'after': after_pid
+    })
+
+    db.session.add(evo_obj)
+    db.session.commit()
+
+    return jsonify({'Status': 'Add Success'})
