@@ -25,7 +25,8 @@ def upgrade():
         sa.Column('id', sa.BigInteger(), nullable=False),
         sa.Column('pid', sa.BigInteger(), nullable=False),
         sa.Column('type', ENUM('Grass', 'Poison', 'Fire'), nullable=False),
-        sa.PrimaryKeyConstraint('id')
+        sa.PrimaryKeyConstraint('id'),
+        sa.UniqueConstraint('pid', 'type')
     )
 
     op.create_foreign_key(
