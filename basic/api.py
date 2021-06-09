@@ -4,6 +4,7 @@ from flask import request
 from basic.models import Info as InfoModel
 from basic.models import Type as TypeModel
 from basic.models import Evolution as EvolutionModel
+from basic.models import PokemonType
 from db import db
 
 basic_api = Blueprint('basic', __name__)
@@ -62,3 +63,19 @@ def delete_pokemon(pid):
     db.session.commit()
 
     return jsonify({'Status': 'Delete Success'})
+
+
+@basic_api.route('/search', methods=['GET'])
+def search():
+    req_data = request.args
+
+    search_type = req_data.get('type')
+    if not search_type:
+        return jsonify({'Status': 'Invalid Input'}), 406
+
+    if search_type not in PokemonType.__members__:
+        return jsonify({'Status': 'Invalid Type'}), 406
+
+    type_objs = TypeModel.query.filter_by(type=PokemonType[search_type]).all()
+
+    return jsonify({'PokemonIds': [obj.pid for obj in type_objs]})
