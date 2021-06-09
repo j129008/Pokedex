@@ -106,7 +106,7 @@ def delete_evolution(before_pid):
     after_pid = int(after_pid) if type(after_pid) is str and after_pid.isnumeric() else after_pid
 
     evo_obj = EvolutionModel.query.filter_by(before=before_pid).filter_by(after=after_pid)
-    print(evo_obj)
+
     if evo_obj:
         evo_obj.delete()
 
