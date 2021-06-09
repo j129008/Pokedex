@@ -1,6 +1,7 @@
 from flask import Blueprint
 from flask import jsonify
 from flask import request
+from sqlalchemy.exc import IntegrityError
 from basic.models import Info as InfoModel
 from basic.models import Type as TypeModel
 from basic.models import Evolution as EvolutionModel
@@ -29,14 +30,25 @@ def add_pokemon():
     info_obj = InfoModel()
     info_obj.from_json(req_data)
     db.session.add(info_obj)
-    db.session.flush()
+
+    try:
+        db.session.flush()
+    except IntegrityError as err:
+        db.session.rollback()
+        if 'Duplicate entry' in str(err):
+            return jsonify({'Status': 'Duplicate Pokemon'})
 
     for t in req_data['types']:
         type_obj = TypeModel()
         type_obj.from_json({'pid': info_obj.id, 'type': t})
         db.session.add(type_obj)
 
-    db.session.commit()
+    try:
+        db.session.commit()
+    except IntegrityError as err:
+        db.session.rollback()
+        if 'Duplicate entry' in str(err):
+            return jsonify({'Status': 'Duplicate Type'})
 
     return jsonify({'Status': 'Create Success'})
 
