@@ -97,3 +97,19 @@ def add_evolution(before_pid):
     db.session.commit()
 
     return jsonify({'Status': 'Add Success'})
+
+
+@basic_api.route('/evolution/<int:before_pid>', methods=['DELETE'])
+def delete_evolution(before_pid):
+    req_data = request.json
+    after_pid = req_data.get('after_pid')
+    after_pid = int(after_pid) if type(after_pid) is str and after_pid.isnumeric() else after_pid
+
+    evo_obj = EvolutionModel.query.filter_by(before=before_pid).filter_by(after=after_pid)
+    print(evo_obj)
+    if evo_obj:
+        evo_obj.delete()
+
+    db.session.commit()
+
+    return jsonify({'Status': 'Delete Success'})
