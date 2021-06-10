@@ -25,6 +25,6 @@ services:
       - FLASK_APP=/root/api/app.py
       - API_FOLDER=/root/api
     depends_on:
-        "mysql"
+      - "mysql"
     links:
       - "mysql"
