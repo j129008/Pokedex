@@ -6,19 +6,25 @@ services:
     restart: always
     environment:
         MYSQL_ROOT_PASSWORD: 123456
+    volumes:
+      - ./sqls:/docker-entrypoint-initdb.d
     ports:
       - "3307:3306"
   api:
     build: .
     restart: always
     command: tail -f /dev/null
+    entrypoint: /root/api/run.sh
     volumes:
-      - .:/root/apiv2
+      - .:/root/api
     ports:
       - "5566:22"
       - "8000:8000"
     environment:
       - LC_ALL=C.UTF-8
-      - FLASK_APP=/root/apiv2/app.py
+      - FLASK_APP=/root/api/app.py
+      - API_FOLDER=/root/api
+    depends_on:
+        "mysql"
     links:
-      - mysql
+      - "mysql"
