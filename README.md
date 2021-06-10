@@ -16,3 +16,4 @@ docker-compose up -d
 * Redis cache Pokemon 資料
 * Unit test
 * 前端界面
+* 資料分頁功能
