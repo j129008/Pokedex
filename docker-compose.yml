@@ -13,7 +13,6 @@ services:
   api:
     build: .
     restart: always
-    command: tail -f /dev/null
     entrypoint: /root/api/run.sh
     volumes:
       - .:/root/api
