@@ -7,3 +7,5 @@ RUN apt-get update \
 # install python modules
 COPY requirements.txt /root/
 RUN pip3 install -r /root/requirements.txt
+
+RUN apt-get -qy install netcat
